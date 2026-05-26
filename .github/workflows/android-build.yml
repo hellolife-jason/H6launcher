@@ -11,8 +11,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment: production
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
     - name: Checkout code
@@ -28,25 +26,19 @@ jobs:
     - name: Set up Android SDK
       uses: android-actions/setup-android@v3
       with:
-        api-level: 28
-        build-tools: 28.0.3
-        ndk: 21.4.7075529
-        cmake: 3.10.2.4988404
-
-    - name: Accept Android licenses
-      run: yes | sdkmanager --licenses || true
+        cmdline-tools-version: latest
+        accept-android-sdk-licenses: true
+        packages: |
+          platforms;android-28
+          build-tools;28.0.3
+          ndk;21.4.7075529
+          cmake;3.10.2.4988404
 
     - name: Build Debug APK
       run: ./gradlew assembleDebug --no-daemon
-      env:
-        ANDROID_HOME: ${{ steps.android-sdk.outputs.sdk-path }}
-        JAVA_HOME: ${{ steps.java-setup.outputs.java-home }}
 
     - name: Build Release APK
       run: ./gradlew assembleRelease --no-daemon
-      env:
-        ANDROID_HOME: ${{ steps.android-sdk.outputs.sdk-path }}
-        JAVA_HOME: ${{ steps.java-setup.outputs.java-home }}
 
     - name: Upload Debug APK
       uses: actions/upload-artifact@v4

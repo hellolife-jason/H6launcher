@@ -13,6 +13,8 @@ jobs:
     environment: production
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      ANDROID_HOME: /usr/local/lib/android/sdk
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
 
     steps:
     - name: Checkout code
@@ -25,13 +27,22 @@ jobs:
         distribution: 'adopt'
         cache: gradle
 
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        cmdline-tools-version: latest
+        accept-android-sdk-licenses: true
+
     - name: Install Android SDK Platform 28
       run: |
-        yes | sdkmanager "platforms;android-28" --sdk_root=${ANDROID_HOME}
+        echo "ANDROID_HOME: $ANDROID_HOME"
+        export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
+        yes | sdkmanager "platforms;android-28"
 
     - name: Install Android Build Tools 28.0.3
       run: |
-        yes | sdkmanager "build-tools;28.0.3" --sdk_root=${ANDROID_HOME}
+        export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
+        yes | sdkmanager "build-tools;28.0.3"
 
     - name: Build Debug APK
       run: ./gradlew assembleDebug --no-daemon

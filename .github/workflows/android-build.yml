@@ -30,11 +30,7 @@ jobs:
       with:
         cmdline-tools-version: latest
         accept-android-sdk-licenses: true
-        packages: |
-          platforms;android-28
-          build-tools;28.0.3
-          ndk;21.4.7075529
-          cmake;3.10.2.4988404
+        packages: platforms;android-28,build-tools;28.0.3
 
     - name: Build Debug APK
       run: ./gradlew assembleDebug --no-daemon

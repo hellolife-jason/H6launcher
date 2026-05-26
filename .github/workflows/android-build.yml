@@ -25,12 +25,13 @@ jobs:
         distribution: 'adopt'
         cache: gradle
 
-    - name: Set up Android SDK
-      uses: android-actions/setup-android@v3
-      with:
-        cmdline-tools-version: latest
-        accept-android-sdk-licenses: true
-        packages: platforms;android-28,build-tools;28.0.3
+    - name: Install Android SDK Platform 28
+      run: |
+        yes | sdkmanager "platforms;android-28" --sdk_root=${ANDROID_HOME}
+
+    - name: Install Android Build Tools 28.0.3
+      run: |
+        yes | sdkmanager "build-tools;28.0.3" --sdk_root=${ANDROID_HOME}
 
     - name: Build Debug APK
       run: ./gradlew assembleDebug --no-daemon
@@ -51,12 +52,3 @@ jobs:
         name: app-release-unsigned.apk
         path: app/build/outputs/apk/release/app-release-unsigned.apk
         retention-days: 30
-
-    - name: Upload Build Logs
-      uses: actions/upload-artifact@v4
-      with:
-        name: build-logs
-        path: |
-          app/build/reports/
-          app/build/outputs/
-        retention-days: 7

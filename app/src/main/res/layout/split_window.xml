@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorSurfaceLight">
+
+    <LinearLayout
+        android:id="@+id/window_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/window_icon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:scaleType="centerInside"/>
+
+        <TextView
+            android:id="@+id/window_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/colorText"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/window_placeholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/colorTextSecondary"
+            android:layout_marginTop="4dp"
+            android:text="点击选择应用"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorBorder"/>
+
+</FrameLayout>

@@ -1,0 +1,70 @@
+name: Android CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 8
+      uses: actions/setup-java@v4
+      with:
+        java-version: '8'
+        distribution: 'adopt'
+        cache: gradle
+
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        api-level: 28
+        build-tools: 28.0.3
+        ndk: 21.4.7075529
+        cmake: 3.10.2.4988404
+
+    - name: Accept Android licenses
+      run: yes | sdkmanager --licenses || true
+
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug --no-daemon
+      env:
+        ANDROID_HOME: ${{ steps.android-sdk.outputs.sdk-path }}
+        JAVA_HOME: ${{ steps.java-setup.outputs.java-home }}
+
+    - name: Build Release APK
+      run: ./gradlew assembleRelease --no-daemon
+      env:
+        ANDROID_HOME: ${{ steps.android-sdk.outputs.sdk-path }}
+        JAVA_HOME: ${{ steps.java-setup.outputs.java-home }}
+
+    - name: Upload Debug APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-debug.apk
+        path: app/build/outputs/apk/debug/app-debug.apk
+        retention-days: 30
+
+    - name: Upload Release APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-release-unsigned.apk
+        path: app/build/outputs/apk/release/app-release-unsigned.apk
+        retention-days: 30
+
+    - name: Upload Build Logs
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-logs
+        path: |
+          app/build/reports/
+          app/build/outputs/
+        retention-days: 7

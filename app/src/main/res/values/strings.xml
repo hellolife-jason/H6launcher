@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">H6 Launcher</string>
+    <string name="dock_position_left">左侧</string>
+    <string name="dock_position_bottom">底部</string>
+    <string name="split_screen_2">二分屏</string>
+    <string name="split_screen_3">三分屏</string>
+    <string name="save_config">保存配置</string>
+    <string name="load_config">加载配置</string>
+    <string name="select_app">选择应用</string>
+    <string name="settings">设置</string>
+    <string name="config_saved">配置已保存</string>
+    <string name="config_loaded">配置已加载</string>
+    <string name="config_overwrite">覆盖现有配置？</string>
+    <string name="dock">Dock</string>
+    <string name="screen_split">分屏</string>
+    <string name="app_selector">应用选择器</string>
+</resources>

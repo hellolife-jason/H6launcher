@@ -1,0 +1,13 @@
+<resources>
+    <color name="colorPrimary">#1a1a2e</color>
+    <color name="colorPrimaryDark">#16213e</color>
+    <color name="colorAccent">#e94560</color>
+    <color name="colorBackground">#1a1a2e</color>
+    <color name="colorSurface">#1f1f3a</color>
+    <color name="colorSurfaceLight">#2a2a4a</color>
+    <color name="colorText">#ffffff</color>
+    <color name="colorTextSecondary">#a0a0c0</color>
+    <color name="colorBorder">#3a3a5a</color>
+    <color name="colorDivider">#2a2a4a</color>
+    <color name="colorHighlight">#e94560</color>
+</resources>

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorSurface"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/settings"
+            android:textSize="20sp"
+            android:textColor="@color/colorText"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="关闭"
+            android:textColor="@color/colorText"
+            android:background="@color/colorSurfaceLight"
+            android:onClick="onClose"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/colorSurface">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dock"
+            android:textSize="16sp"
+            android:textColor="@color/colorText"
+            android:layout_marginBottom="12dp"/>
+
+        <RadioGroup
+            android:id="@+id/dock_position_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/dock_left"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/dock_position_left"
+                android:textColor="@color/colorText"/>
+
+            <RadioButton
+                android:id="@+id/dock_bottom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/dock_position_bottom"
+                android:textColor="@color/colorText"/>
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/colorSurface"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/screen_split"
+            android:textSize="16sp"
+            android:textColor="@color/colorText"
+            android:layout_marginBottom="12dp"/>
+
+        <RadioGroup
+            android:id="@+id/split_mode_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/split_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/split_screen_2"
+                android:textColor="@color/colorText"/>
+
+            <RadioButton
+                android:id="@+id/split_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/split_screen_3"
+                android:textColor="@color/colorText"/>
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/colorSurface"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save_config"
+            android:textSize="16sp"
+            android:textColor="@color/colorText"
+            android:layout_marginBottom="12dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_save_config_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="配置1"
+                android:textColor="@color/colorText"
+                android:background="@color/colorSurfaceLight"
+                android:layout_marginRight="8dp"/>
+
+            <Button
+                android:id="@+id/btn_save_config_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="配置2"
+                android:textColor="@color/colorText"
+                android:background="@color/colorSurfaceLight"
+                android:layout_marginRight="8dp"/>
+
+            <Button
+                android:id="@+id/btn_save_config_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="配置3"
+                android:textColor="@color/colorText"
+                android:background="@color/colorSurfaceLight"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/colorSurface"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/load_config"
+            android:textSize="16sp"
+            android:textColor="@color/colorText"
+            android:layout_marginBottom="12dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_load_config_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="配置1"
+                android:textColor="@color/colorText"
+                android:background="@color/colorSurfaceLight"
+                android:layout_marginRight="8dp"/>
+
+            <Button
+                android:id="@+id/btn_load_config_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="配置2"
+                android:textColor="@color/colorText"
+                android:background="@color/colorSurfaceLight"
+                android:layout_marginRight="8dp"/>
+
+            <Button
+                android:id="@+id/btn_load_config_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="配置3"
+                android:textColor="@color/colorText"
+                android:background="@color/colorSurfaceLight"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

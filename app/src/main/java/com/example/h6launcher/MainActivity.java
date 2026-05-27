@@ -58,6 +58,26 @@ public class MainActivity extends Activity implements SplitScreenLayout.OnWindow
         updateLayoutForDockPosition();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        applySettings();
+    }
+
+    private void applySettings() {
+        int dockPosition = configManager.getDockPosition();
+        int splitMode = configManager.getSplitMode();
+        
+        if (dockView.getPosition() != dockPosition) {
+            dockView.setPosition(dockPosition);
+            updateLayoutForDockPosition();
+        }
+        
+        if (splitScreenLayout.getSplitMode() != splitMode) {
+            splitScreenLayout.setSplitMode(splitMode);
+        }
+    }
+
     private void initDock() {
         dockView.setPosition(configManager.getDockPosition());
         dockView.setApps(getDefaultDockApps());
@@ -99,13 +119,22 @@ public class MainActivity extends Activity implements SplitScreenLayout.OnWindow
             PackageManager pm = getPackageManager();
             Intent intent = pm.getLaunchIntentForPackage(app.getPackageName());
             if (intent != null) {
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             } else {
                 android.util.Log.e(TAG, "No launch intent for: " + app.getPackageName());
             }
         } catch (Exception e) {
             android.util.Log.e(TAG, "Failed to launch app: " + app.getPackageName(), e);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (appListView.getParent() != null) {
+            showDesktop();
+        } else {
+            super.onBackPressed();
         }
     }
 

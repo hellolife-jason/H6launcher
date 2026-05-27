@@ -34,25 +34,19 @@ public class SettingsActivity extends Activity {
         );
         
         dockPositionGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            MainActivity launcher = (MainActivity) getParent();
-            if (launcher != null) {
-                launcher.setDockPosition(
-                    checkedId == R.id.dock_left 
-                        ? ConfigManager.DOCK_POSITION_LEFT 
-                        : ConfigManager.DOCK_POSITION_BOTTOM
-                );
-            }
+            configManager.setDockPosition(
+                checkedId == R.id.dock_left 
+                    ? ConfigManager.DOCK_POSITION_LEFT 
+                    : ConfigManager.DOCK_POSITION_BOTTOM
+            );
         });
         
         splitModeGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            MainActivity launcher = (MainActivity) getParent();
-            if (launcher != null) {
-                launcher.setSplitMode(
-                    checkedId == R.id.split_2 
-                        ? ConfigManager.SPLIT_MODE_2 
-                        : ConfigManager.SPLIT_MODE_3
-                );
-            }
+            configManager.setSplitMode(
+                checkedId == R.id.split_2 
+                    ? ConfigManager.SPLIT_MODE_2 
+                    : ConfigManager.SPLIT_MODE_3
+            );
         });
         
         Button saveConfig1Btn = findViewById(R.id.btn_save_config_1);
@@ -73,20 +67,24 @@ public class SettingsActivity extends Activity {
     }
     
     private void saveConfig(int index) {
-        MainActivity launcher = (MainActivity) getParent();
-        if (launcher != null) {
-            launcher.saveCurrentConfig(index);
-            Toast.makeText(this, getString(R.string.config_saved), Toast.LENGTH_SHORT).show();
-            updateConfigButtons();
+        SplitConfig config = new SplitConfig();
+        config.setSplitMode(configManager.getSplitMode());
+        config.setRatios(new float[]{0.5f, 0.5f});
+        if (config.getSplitMode() == ConfigManager.SPLIT_MODE_3) {
+            config.setRatios(new float[]{0.33f, 0.33f, 0.34f});
         }
+        configManager.saveConfig(index, config);
+        Toast.makeText(this, getString(R.string.config_saved), Toast.LENGTH_SHORT).show();
+        updateConfigButtons();
     }
     
     private void loadConfig(int index) {
-        MainActivity launcher = (MainActivity) getParent();
-        if (launcher != null) {
-            launcher.loadConfig(index);
-            Toast.makeText(this, getString(R.string.config_loaded), Toast.LENGTH_SHORT).show();
+        configManager.setActiveConfigIndex(index);
+        SplitConfig config = configManager.getConfig(index);
+        if (config != null) {
+            configManager.setSplitMode(config.getSplitMode());
         }
+        Toast.makeText(this, getString(R.string.config_loaded), Toast.LENGTH_SHORT).show();
     }
     
     private void updateConfigButtons() {

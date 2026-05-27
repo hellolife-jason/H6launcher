@@ -16,7 +16,9 @@
         android:id="@+id/content_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@id/dock_view">
+        android:layout_toRightOf="@id/dock_view"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true">
 
         <com.example.h6launcher.SplitScreenLayout
             android:id="@+id/split_screen_layout"

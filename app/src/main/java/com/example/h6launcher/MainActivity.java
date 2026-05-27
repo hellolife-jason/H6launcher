@@ -2,6 +2,8 @@ package com.example.h6launcher;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +54,8 @@ public class MainActivity extends Activity implements SplitScreenLayout.OnWindow
         dockView.setOnHomeToggleListener(this::onHomeToggle);
         
         loadLastConfig();
+        
+        updateLayoutForDockPosition();
     }
 
     private void initDock() {
@@ -85,9 +89,27 @@ public class MainActivity extends Activity implements SplitScreenLayout.OnWindow
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
             } else {
-                AppUtils.launchApp(MainActivity.this, app.getPackageName(), app.getClassName());
+                launchApp(app);
             }
         });
+    }
+
+    private void launchApp(AppInfo app) {
+        try {
+            PackageManager pm = getPackageManager();
+            Intent intent = pm.getLaunchIntentForPackage(app.getPackageName());
+            if (intent != null) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            } else {
+                Intent explicitIntent = new Intent();
+                explicitIntent.setClassName(app.getPackageName(), app.getClassName());
+                explicitIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(explicitIntent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private List<AppInfo> getDefaultDockApps() {
@@ -224,29 +246,40 @@ public class MainActivity extends Activity implements SplitScreenLayout.OnWindow
     private void updateLayoutForDockPosition() {
         int position = configManager.getDockPosition();
         RelativeLayout.LayoutParams dockParams = (RelativeLayout.LayoutParams) dockView.getLayoutParams();
+        RelativeLayout.LayoutParams containerParams = (RelativeLayout.LayoutParams) contentContainer.getLayoutParams();
         
         if (position == ConfigManager.DOCK_POSITION_LEFT) {
+            dockParams.width = 72;
+            dockParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
             dockParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             dockParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             dockParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            dockParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
+            dockParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
             
-            RelativeLayout.LayoutParams containerParams = (RelativeLayout.LayoutParams) contentContainer.getLayoutParams();
+            containerParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+            containerParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
             containerParams.addRule(RelativeLayout.RIGHT_OF, R.id.dock_view);
+            containerParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            containerParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             containerParams.addRule(RelativeLayout.ABOVE, 0);
         } else {
+            dockParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+            dockParams.height = 72;
             dockParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             dockParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             dockParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            dockParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
+            dockParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
             
-            RelativeLayout.LayoutParams containerParams = (RelativeLayout.LayoutParams) contentContainer.getLayoutParams();
+            containerParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+            containerParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
             containerParams.addRule(RelativeLayout.ABOVE, R.id.dock_view);
+            containerParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            containerParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             containerParams.addRule(RelativeLayout.RIGHT_OF, 0);
         }
         
         dockView.setLayoutParams(dockParams);
-        contentContainer.setLayoutParams(contentContainer.getLayoutParams());
+        contentContainer.setLayoutParams(containerParams);
     }
 
     private class AppListAdapter extends BaseAdapter {

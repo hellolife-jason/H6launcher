@@ -92,34 +92,31 @@ public class DockView extends LinearLayout {
         
         removeAllViews();
         
+        // 创建新的容器，避免视图层次问题
+        container = new LinearLayout(context);
+        
         if (position == ConfigManager.DOCK_POSITION_LEFT) {
             setOrientation(VERTICAL);
             
-            if (!(scrollContainer instanceof ScrollView)) {
-                scrollContainer = new ScrollView(context);
-                ((ScrollView) scrollContainer).setHorizontalScrollBarEnabled(false);
-                ((ScrollView) scrollContainer).setVerticalScrollBarEnabled(false);
-            }
+            scrollContainer = new ScrollView(context);
+            ((ScrollView) scrollContainer).setHorizontalScrollBarEnabled(false);
+            ((ScrollView) scrollContainer).setVerticalScrollBarEnabled(false);
             container.setOrientation(VERTICAL);
             
             // 左侧布局：主页按钮固定在左下角（先添加scrollContainer，再添加toggleButton）
             addView(scrollContainer, new LayoutParams(LayoutParams.MATCH_PARENT, 0, 1));
-            ((ScrollView) scrollContainer).removeAllViews();
             ((ScrollView) scrollContainer).addView(container, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
             addView(toggleButton, new LayoutParams(LayoutParams.MATCH_PARENT, 64));
         } else {
             setOrientation(HORIZONTAL);
             
-            if (!(scrollContainer instanceof HorizontalScrollView)) {
-                scrollContainer = new HorizontalScrollView(context);
-                ((HorizontalScrollView) scrollContainer).setHorizontalScrollBarEnabled(false);
-                ((HorizontalScrollView) scrollContainer).setVerticalScrollBarEnabled(false);
-            }
+            scrollContainer = new HorizontalScrollView(context);
+            ((HorizontalScrollView) scrollContainer).setHorizontalScrollBarEnabled(false);
+            ((HorizontalScrollView) scrollContainer).setVerticalScrollBarEnabled(false);
             container.setOrientation(HORIZONTAL);
             
             // 底部布局：主页按钮位于左侧第一个
             addView(toggleButton, new LayoutParams(64, LayoutParams.MATCH_PARENT));
-            ((HorizontalScrollView) scrollContainer).removeAllViews();
             ((HorizontalScrollView) scrollContainer).addView(container, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
             addView(scrollContainer, new LayoutParams(0, LayoutParams.MATCH_PARENT, 1));
         }

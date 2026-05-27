@@ -218,17 +218,15 @@ public class MainActivity extends Activity implements SplitScreenLayout.OnWindow
             PackageManager pm = getPackageManager();
             Intent intent = pm.getLaunchIntentForPackage(packageName);
             if (intent != null) {
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                
-                // 尝试使用系统分屏模式（API 24+）
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
-                }
-                
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                Toast.makeText(this, "应用已启动", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "无法启动该应用", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             android.util.Log.e(TAG, "Failed to launch app in window: " + packageName, e);
+            Toast.makeText(this, "启动应用失败", Toast.LENGTH_SHORT).show();
         }
     }
 

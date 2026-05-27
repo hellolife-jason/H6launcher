@@ -105,17 +105,14 @@ fi
 
 # Increase the maximum file descriptors if we can.
 if [ "$cygwin" = "false" -a "$darwin" = "false" -a "$nonstop" = "false" ] ; then
-    MAX_FD_LIMIT=`ulimit -H -n`
-    if [ $? -eq 0 ] ; then
-        if [ "$MAX_FD" = "maximum" -o "$MAX_FD" -ge "$MAX_FD_LIMIT" ] ; then
+    MAX_FD_LIMIT=`ulimit -H -n 2>/dev/null`
+    if [ $? -eq 0 ] && [ "$MAX_FD_LIMIT" != "" ] ; then
+        if [ "$MAX_FD" = "maximum" ] || [ "$MAX_FD" -ge "$MAX_FD_LIMIT" ] 2>/dev/null; then
             MAX_FD="$MAX_FD_LIMIT"
         fi
-        ulimit -n $MAX_FD
-        if [ $? -ne 0 ] ; then
-            warn "Could not set maximum file descriptor limit: $MAX_FD"
-        fi
+        ulimit -n "$MAX_FD" 2>/dev/null || warn "Could not set maximum file descriptor limit: $MAX_FD"
     else
-        warn "Could not query maximum file descriptor limit: $MAX_FD"
+        warn "Could not query maximum file descriptor limit"
     fi
 fi
 
@@ -146,11 +143,11 @@ if [ "$cygwin" = "true" -o "$msys" = "true" ] ; then
     i=0
     for arg in "$@" ; do
         CHECK=`echo "$arg"|egrep -c "$OURCYGPATTERN" -`
-        CHECK2=`echo "$arg"|egrep -c "^-"`                                 ### Determine if an option
-        if [ $CHECK -ne 0 ] && [ $CHECK2 -eq 0 ] ; then                    ### Added a condition
-            eval `echo args$i`=`cygpath --path --ignore --mixed "$arg"`
+        CHECK2=`echo "$arg"|egrep -c "^-"`
+        if [ $CHECK -ne 0 ] && [ $CHECK2 -eq 0 ] ; then
+            eval "args$i=\"`cygpath --path --ignore --mixed "$arg"`\""
         else
-            eval `echo args$i`="\"$arg\""
+            eval "args$i=\"$arg\""
         fi
         i=`expr $i + 1`
     done

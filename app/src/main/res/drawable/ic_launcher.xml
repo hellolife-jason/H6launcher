@@ -4,11 +4,11 @@
     android:viewportWidth="48"
     android:viewportHeight="48">
     <circle
-        android:cx="24"
-        android:cy="24"
-        android:r="22"
-        android:fillColor="#e94560"/>
+        cx="24"
+        cy="24"
+        r="22"
+        fillColor="#e94560"/>
     <path
-        android:fillColor="#ffffff"
-        android:pathData="M18,30 L22,24 L22,18 L26,18 L26,24 L30,30 Z"/>
+        fillColor="#ffffff"
+        pathData="M18,30 L22,24 L22,18 L26,18 L26,24 L30,30 Z"/>
 </vector>

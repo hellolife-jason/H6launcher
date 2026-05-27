@@ -55,6 +55,10 @@ public class SplitScreenLayout extends HorizontalScrollView {
         updateLayout();
     }
 
+    public int getSplitMode() {
+        return splitMode;
+    }
+
     public void setRatios(float[] ratios) {
         this.ratios = ratios;
         updateLayout();

@@ -113,6 +113,13 @@ public class SplitScreenLayout extends HorizontalScrollView {
         return null;
     }
 
+    public View getWindowView(int index) {
+        if (windows != null && index >= 0 && index < windows.length) {
+            return windows[index];
+        }
+        return null;
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);

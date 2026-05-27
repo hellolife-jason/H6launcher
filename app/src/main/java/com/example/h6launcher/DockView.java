@@ -113,11 +113,12 @@ public class DockView extends LinearLayout {
             scrollContainer = new HorizontalScrollView(context);
             ((HorizontalScrollView) scrollContainer).setHorizontalScrollBarEnabled(false);
             ((HorizontalScrollView) scrollContainer).setVerticalScrollBarEnabled(false);
+            container = new LinearLayout(context);
             container.setOrientation(HORIZONTAL);
+            ((HorizontalScrollView) scrollContainer).addView(container, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
             
             // 底部布局：主页按钮位于左侧第一个
             addView(toggleButton, new LayoutParams(64, LayoutParams.MATCH_PARENT));
-            ((HorizontalScrollView) scrollContainer).addView(container, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
             addView(scrollContainer, new LayoutParams(0, LayoutParams.MATCH_PARENT, 1));
         }
         

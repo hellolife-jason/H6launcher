@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.app.ActivityOptions;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -220,7 +221,25 @@ public class MainActivity extends Activity implements SplitScreenLayout.OnWindow
             Intent intent = pm.getLaunchIntentForPackage(packageName);
             if (intent != null) {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                
+                View targetWindow = splitScreenLayout.getWindowView(windowIndex);
+                if (targetWindow != null) {
+                    int[] location = new int[2];
+                    targetWindow.getLocationOnScreen(location);
+                    android.graphics.Rect bounds = new android.graphics.Rect(
+                        location[0], 
+                        location[1], 
+                        location[0] + targetWindow.getWidth(), 
+                        location[1] + targetWindow.getHeight()
+                    );
+                    
+                    ActivityOptions options = ActivityOptions.makeBasic();
+                    options.setLaunchBounds(bounds);
+                    startActivity(intent, options.toBundle());
+                } else {
+                    startActivity(intent);
+                }
+                
                 Toast.makeText(this, "应用已启动", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "无法启动该应用", Toast.LENGTH_SHORT).show();

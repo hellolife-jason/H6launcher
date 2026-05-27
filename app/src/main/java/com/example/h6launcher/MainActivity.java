@@ -296,6 +296,10 @@ public class MainActivity extends Activity implements SplitScreenLayout.OnWindow
     }
 
     private void updateLayoutForDockPosition() {
+        if (dockView == null || contentContainer == null) {
+            return;
+        }
+        
         int position = configManager.getDockPosition();
         RelativeLayout.LayoutParams dockParams = (RelativeLayout.LayoutParams) dockView.getLayoutParams();
         RelativeLayout.LayoutParams containerParams = (RelativeLayout.LayoutParams) contentContainer.getLayoutParams();

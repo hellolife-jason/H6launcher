@@ -65,6 +65,10 @@ public class MainActivity extends Activity implements SplitScreenLayout.OnWindow
     }
 
     private void applySettings() {
+        if (dockView == null || splitScreenLayout == null) {
+            return;
+        }
+        
         int dockPosition = configManager.getDockPosition();
         int splitMode = configManager.getSplitMode();
         
@@ -203,6 +207,28 @@ public class MainActivity extends Activity implements SplitScreenLayout.OnWindow
             
             WindowConfig config = new WindowConfig(packageName, className, label);
             splitScreenLayout.setWindowConfig(selectedWindowIndex, config);
+            
+            // 启动选中的应用
+            launchAppInWindow(packageName, className, selectedWindowIndex);
+        }
+    }
+    
+    private void launchAppInWindow(String packageName, String className, int windowIndex) {
+        try {
+            PackageManager pm = getPackageManager();
+            Intent intent = pm.getLaunchIntentForPackage(packageName);
+            if (intent != null) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                
+                // 尝试使用系统分屏模式（API 24+）
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
+                }
+                
+                startActivity(intent);
+            }
+        } catch (Exception e) {
+            android.util.Log.e(TAG, "Failed to launch app in window: " + packageName, e);
         }
     }
 

@@ -70,8 +70,9 @@ public class DockView extends LinearLayout {
             }
         });
         
-        addView(toggleButton, new LayoutParams(LayoutParams.MATCH_PARENT, 64));
+        // 左侧布局：主页按钮在顶部
         addView(scrollContainer, new LayoutParams(LayoutParams.MATCH_PARENT, 0, 1));
+        addView(toggleButton, new LayoutParams(LayoutParams.MATCH_PARENT, 64));
     }
 
     private void updateToggleButtonIcon() {
@@ -97,10 +98,11 @@ public class DockView extends LinearLayout {
             }
             container.setOrientation(VERTICAL);
             
-            addView(toggleButton, new LayoutParams(LayoutParams.MATCH_PARENT, 64));
+            // 左侧布局：主页按钮固定在左下角（先添加scrollContainer，再添加toggleButton）
+            addView(scrollContainer, new LayoutParams(LayoutParams.MATCH_PARENT, 0, 1));
             ((ScrollView) scrollContainer).removeAllViews();
             ((ScrollView) scrollContainer).addView(container, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-            addView(scrollContainer, new LayoutParams(LayoutParams.MATCH_PARENT, 0, 1));
+            addView(toggleButton, new LayoutParams(LayoutParams.MATCH_PARENT, 64));
         } else {
             setOrientation(HORIZONTAL);
             
@@ -111,6 +113,7 @@ public class DockView extends LinearLayout {
             }
             container.setOrientation(HORIZONTAL);
             
+            // 底部布局：主页按钮位于左侧第一个
             addView(toggleButton, new LayoutParams(64, LayoutParams.MATCH_PARENT));
             ((HorizontalScrollView) scrollContainer).removeAllViews();
             ((HorizontalScrollView) scrollContainer).addView(container, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));

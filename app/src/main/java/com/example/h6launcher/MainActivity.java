@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridView;
@@ -19,6 +18,7 @@ import java.util.List;
 public class MainActivity extends Activity implements SplitScreenLayout.OnWindowClickListener {
     private static final String TAG = "MainActivity";
     private static final int REQUEST_APP_SELECTOR = 1001;
+    private static final String SETTINGS_PACKAGE_NAME = "com.example.h6launcher.settings";
     
     private RelativeLayout rootLayout;
     private DockView dockView;
@@ -68,12 +68,25 @@ public class MainActivity extends Activity implements SplitScreenLayout.OnWindow
         appGrid = appListView.findViewById(R.id.app_grid);
         
         allApps = AppUtils.getInstalledApps(this);
+        
+        AppInfo settingsApp = new AppInfo();
+        settingsApp.setPackageName(SETTINGS_PACKAGE_NAME);
+        settingsApp.setClassName(SettingsActivity.class.getName());
+        settingsApp.setLabel("桌面设置");
+        settingsApp.setIcon(getResources().getDrawable(R.drawable.ic_settings));
+        allApps.add(0, settingsApp);
+        
         appListAdapter = new AppListAdapter();
         appGrid.setAdapter(appListAdapter);
         
         appGrid.setOnItemClickListener((parent, view, position, id) -> {
             AppInfo app = allApps.get(position);
-            AppUtils.launchApp(MainActivity.this, app.getPackageName(), app.getClassName());
+            if (SETTINGS_PACKAGE_NAME.equals(app.getPackageName())) {
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
+            } else {
+                AppUtils.launchApp(MainActivity.this, app.getPackageName(), app.getClassName());
+            }
         });
     }
 
@@ -234,11 +247,6 @@ public class MainActivity extends Activity implements SplitScreenLayout.OnWindow
         
         dockView.setLayoutParams(dockParams);
         contentContainer.setLayoutParams(contentContainer.getLayoutParams());
-    }
-
-    public void onSettingsClick(View view) {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
     }
 
     private class AppListAdapter extends BaseAdapter {

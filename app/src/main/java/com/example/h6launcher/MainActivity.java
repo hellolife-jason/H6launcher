@@ -96,22 +96,13 @@ public class MainActivity extends Activity implements SplitScreenLayout.OnWindow
 
     private void launchApp(AppInfo app) {
         try {
-            Intent intent = new Intent();
-            intent.setClassName(app.getPackageName(), app.getClassName());
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.setPackage(app.getPackageName());
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         } catch (Exception e) {
-            android.util.Log.e(TAG, "Failed to launch app: " + app.getPackageName() + "/" + app.getClassName(), e);
-            try {
-                PackageManager pm = getPackageManager();
-                Intent launchIntent = pm.getLaunchIntentForPackage(app.getPackageName());
-                if (launchIntent != null) {
-                    launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(launchIntent);
-                }
-            } catch (Exception e2) {
-                android.util.Log.e(TAG, "Failed to launch app with fallback: " + app.getPackageName(), e2);
-            }
+            android.util.Log.e(TAG, "Failed to launch app: " + app.getPackageName(), e);
         }
     }
 

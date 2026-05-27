@@ -3,9 +3,15 @@ package com.example.h6launcher;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +23,13 @@ public class MainActivity extends Activity implements SplitScreenLayout.OnWindow
     private RelativeLayout rootLayout;
     private DockView dockView;
     private SplitScreenLayout splitScreenLayout;
+    private FrameLayout contentContainer;
+    private View appListView;
+    private GridView appGrid;
     private ConfigManager configManager;
     private int selectedWindowIndex = -1;
+    private List<AppInfo> allApps;
+    private AppListAdapter appListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +41,15 @@ public class MainActivity extends Activity implements SplitScreenLayout.OnWindow
         rootLayout = findViewById(R.id.root_layout);
         dockView = findViewById(R.id.dock_view);
         splitScreenLayout = findViewById(R.id.split_screen_layout);
+        contentContainer = findViewById(R.id.content_container);
         
         splitScreenLayout.setOnWindowClickListener(this);
         
         initDock();
         initSplitScreen();
+        initAppListView();
+        
+        dockView.setOnHomeToggleListener(this::onHomeToggle);
         
         loadLastConfig();
     }
@@ -46,6 +61,20 @@ public class MainActivity extends Activity implements SplitScreenLayout.OnWindow
 
     private void initSplitScreen() {
         splitScreenLayout.setSplitMode(configManager.getSplitMode());
+    }
+
+    private void initAppListView() {
+        appListView = getLayoutInflater().inflate(R.layout.app_list_content, null);
+        appGrid = appListView.findViewById(R.id.app_grid);
+        
+        allApps = AppUtils.getInstalledApps(this);
+        appListAdapter = new AppListAdapter();
+        appGrid.setAdapter(appListAdapter);
+        
+        appGrid.setOnItemClickListener((parent, view, position, id) -> {
+            AppInfo app = allApps.get(position);
+            AppUtils.launchApp(MainActivity.this, app.getPackageName(), app.getClassName());
+        });
     }
 
     private List<AppInfo> getDefaultDockApps() {
@@ -116,6 +145,33 @@ public class MainActivity extends Activity implements SplitScreenLayout.OnWindow
         }
     }
 
+    private void onHomeToggle(boolean isHomeMode) {
+        if (isHomeMode) {
+            showDesktop();
+        } else {
+            showAppList();
+        }
+    }
+
+    private void showDesktop() {
+        if (appListView.getParent() != null) {
+            ((ViewGroup) appListView.getParent()).removeView(appListView);
+        }
+        splitScreenLayout.setVisibility(View.VISIBLE);
+        dockView.setHomeMode(true);
+    }
+
+    private void showAppList() {
+        splitScreenLayout.setVisibility(View.GONE);
+        if (appListView.getParent() == null) {
+            contentContainer.addView(appListView, new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, 
+                FrameLayout.LayoutParams.MATCH_PARENT
+            ));
+        }
+        dockView.setHomeMode(false);
+    }
+
     public void saveCurrentConfig(int configIndex) {
         SplitConfig config = new SplitConfig();
         config.setSplitMode(splitScreenLayout.getSplitMode());
@@ -162,24 +218,60 @@ public class MainActivity extends Activity implements SplitScreenLayout.OnWindow
             dockParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             dockParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
             
-            RelativeLayout.LayoutParams splitParams = (RelativeLayout.LayoutParams) splitScreenLayout.getLayoutParams();
-            splitParams.addRule(RelativeLayout.RIGHT_OF, R.id.dock_view);
+            RelativeLayout.LayoutParams containerParams = (RelativeLayout.LayoutParams) contentContainer.getLayoutParams();
+            containerParams.addRule(RelativeLayout.RIGHT_OF, R.id.dock_view);
+            containerParams.addRule(RelativeLayout.ABOVE, 0);
         } else {
             dockParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             dockParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             dockParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             dockParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
             
-            RelativeLayout.LayoutParams splitParams = (RelativeLayout.LayoutParams) splitScreenLayout.getLayoutParams();
-            splitParams.addRule(RelativeLayout.ABOVE, R.id.dock_view);
+            RelativeLayout.LayoutParams containerParams = (RelativeLayout.LayoutParams) contentContainer.getLayoutParams();
+            containerParams.addRule(RelativeLayout.ABOVE, R.id.dock_view);
+            containerParams.addRule(RelativeLayout.RIGHT_OF, 0);
         }
         
         dockView.setLayoutParams(dockParams);
-        splitScreenLayout.setLayoutParams(splitScreenLayout.getLayoutParams());
+        contentContainer.setLayoutParams(contentContainer.getLayoutParams());
     }
 
     public void onSettingsClick(View view) {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
+    }
+
+    private class AppListAdapter extends BaseAdapter {
+        @Override
+        public int getCount() {
+            return allApps.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return allApps.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = convertView;
+            if (view == null) {
+                view = getLayoutInflater().inflate(R.layout.app_item, parent, false);
+            }
+            
+            ImageView iconView = view.findViewById(R.id.app_icon);
+            TextView labelView = view.findViewById(R.id.app_label);
+            
+            AppInfo app = allApps.get(position);
+            iconView.setImageDrawable(app.getIcon());
+            labelView.setText(app.getLabel());
+            
+            return view;
+        }
     }
 }

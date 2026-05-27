@@ -14,4 +14,5 @@
     <string name="dock">Dock</string>
     <string name="screen_split">分屏</string>
     <string name="app_selector">应用选择器</string>
+    <string name="app_list">应用列表</string>
 </resources>
